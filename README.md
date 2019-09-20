@@ -2,7 +2,7 @@
 
 ## Advanced version of Agatha software for periodic signal diagnostics
 
-### Compared with Agatha v1.0, v2.0 provide the following new features:
+### Compared with Agatha v1.0, v2.0 provides the following new features:
 
 > 1. The autoregressive noise model can be used to calculate BFP
 
@@ -30,7 +30,7 @@ After downloading the source code and entering the `agatha2/` directory, you can
 
 >The second argument `0.1` is the oversampling parameter (ofac), ofac>1 is recommended although lower sampling rate is efficient for test.
 
->The third argument `data` is the directory where the data files are put. If the directory is where the agatha2.R file is located, use `.` instead.
+>The third argument `data` is the relative path where the data files are put. If the directory is where the agatha2.R file is located, use `.` instead.
 
 >The last arguments provide the data files to be analyzed. Agatha 2.0 only support analysis of one set per target and thus multiple data files would be treated independently. 
 

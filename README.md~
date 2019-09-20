@@ -22,7 +22,7 @@ Then install R packages using
 
 ## 2. Usage
 
-After downloading the source code and entering the  You can run the following commandline in your terminal
+After downloading the source code and entering the `agatha2/` directory, you can run the following commandline in your terminal,
 
 `Rscript agatha2.R BFP kepler 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels`
 
