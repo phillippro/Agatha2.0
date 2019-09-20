@@ -2,7 +2,7 @@
 
 ## Advanced version of Agatha software for periodic signal diagnostics
 
-### Compared with Agatha v1.0 ([Shiny App](https://phillippro.shinyapps.io/Agatha/) or [GitHub source code](https://github.com/phillippro/agatha)), v2.0 provides the following new features:
+### Compared with Agatha v1.0, v2.0 provides the following new features:
 
 > 1. The autoregressive noise model can be used to calculate BFP
 
