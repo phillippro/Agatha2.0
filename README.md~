@@ -16,7 +16,7 @@
 
 Install most recent R and R packages from CRAN, for example, [https://cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/).
 
-Then install R packages in the R console using
+Then install R packages using
 
 `install.packages(c('minpack.lm','magicaxis','foreach','doMC','parallel'))`
 
