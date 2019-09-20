@@ -10,26 +10,29 @@ source('orbit.R')
 options(warn=2)
 args <- commandArgs(trailingOnly=TRUE)
 if(length(args)>0){
-    Nmax <- as.integer(args[1])
-    ofac <- as.numeric(args[2])
-    noise <- args[3]
-    dir.in <- args[4]
-    fs <- args[5:length(args)]
+    PerType <- args[1]
+    SigType <- args[2]
+    Nmax <- as.integer(args[3])
+    ofac <- as.numeric(args[4])
+    noise <- args[5]
+    dir.in <- args[6]
+    fs <- args[7:length(args)]
 }else{
+    PerType <- 'BFP'
+    SigType <- 'kepler'
     Nmax <- 2
     ofac <- 0.1
     noise <- 'MA'
     dir.in <- 'data/'
     fs <- c('HD210193_PFS.vels','HD103949_PFS.vels')
 }
-#example: Rscript agatha2.R 2 0.1 MA ../data HD210193_PFS.vels HD103949_PFS.vels
+#example: Rscript agatha2.R BFP 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels
 if(!grepl('\\/$',dir.in)) dir.in <- paste0(dir.in,'/')
 dir <- 'results/'
 save.data <- TRUE
 targets <- gsub('_.+','',fs)
 fs <- paste0(dir.in,fs)
 Ncores <- 1
-per.type <- 'BFP'
 Nsamp <- 1
 Pmin <- 1.1
 Pmax <- 1e4
@@ -37,7 +40,7 @@ fmin <- 1/Pmax
 fmax <- 1/Pmin
 lnBF <- pars <- Popt <- list()
 if(Ncores>0) {registerDoMC(Ncores)} else {registerDoMC()}
-labels <-c(paste0(per.type,' for raw RV'),rep(paste0(per.type,' for raw RV subtracted by signal'),Nmax-1),paste0(per.type,' for Sindex'),paste0(per.type,' for Halpha'),paste0(per.type,' for Photon Count'),paste0(per.type,' for Observation Time'),'Lomb-Scargle window function',paste0(per.type,' for raw RV subtracted by signal'))
+labels <-c(paste0(PerType,' for raw RV'),rep(paste0(PerType,' for raw RV subtracted by signal'),Nmax-1),paste0(PerType,' for Sindex'),paste0(PerType,' for Halpha'),paste0(PerType,' for Photon Count'),paste0(PerType,' for Observation Time'),'Lomb-Scargle window function',paste0(PerType,' for raw RV subtracted by signal'))
 for(jj in 1:length(targets)){
 #for(jj in 1){
 #out <- foreach(jj = 1:length(targets)) %dopar% {
@@ -51,7 +54,8 @@ for(jj in 1:length(targets)){
     }else{
         target <- targets[jj]
     }
-    cat('target:',target,'\n')
+    cat('\ntarget:',target,'\n')
+    syntax <- paste0(target,'_',PerType,'_',noise)
     tab <- read.table(f,header=TRUE)
     tmin <- min(tab[,1])
     if(tmin<2400000) tmin <- tmin+2400000
@@ -85,23 +89,23 @@ for(jj in 1:length(targets)){
             n <- 'window'
         }
         if(length(y)>10){
-            SigType <- 'Kepler'
+            SigType <- 'kepler'
         }else{
-            SigType <- 'Circular'
+            SigType <- 'circular'
         }
 
 ####save data
         Indices <- NULL
         if(n!='window'){
-            if(per.type=='BFP'){
+            if(PerType=='BFP'){
                 p <- q <- 0
                 if(noise=='MA' & length(y)>10) q <- 1
                 if(noise=='AR' & length(y)>10) p <- 1
                 per <- BFP(t,y,ey,Nma=q,Nar=p,Indices=Indices,ofac=ofac,model.type='man',fmin=fmin,fmax=fmax,quantify=TRUE,progress=FALSE,GP=FALSE,gp.par=rep(NA,3),noise.only=FALSE,Nsamp=Nsamp,sampling='combined',par.opt=NULL,renew=TRUE)
-                if(SigType=='Kepler'){
+                if(SigType=='kepler'){
                     kep <- Circ2kep(per,basis='natural')
                 }
-            }else if(per.type=='GLST'){
+            }else if(PerType=='GLST'){
                 per <- glst(t,y,ey,fmax=fmax,ofac=ofac,fmin=fmin)
             }
         }else{
@@ -113,7 +117,7 @@ for(jj in 1:length(targets)){
             pp <- per$power
         }
         lnBF1[[n]] <- lnbf <- pp
-        if(per.type=='GLST'){
+        if(PerType=='GLST'){
             par1[[n]] <- par.opt <- unlist(per$par.opt)
         }else{
             par1[[n]] <- par.opt <- per$par.opt[1,]
@@ -124,14 +128,8 @@ for(jj in 1:length(targets)){
         }
 
 ####plot periodograms
-        if(grepl('sig',n)){
-            nsig <- as.integer(gsub('sig','',n))
-            show.name <- paste0('MA',nsig)
-        }else{
-            show.name <- n
-        }
-        fout <- paste0(dir,target,'_',show.name,'_FF.pdf')
-        cat(fout,'\n')
+        fout <- paste0(dir,syntax,'_periodogram_',n,'.pdf')
+        cat('\n',fout,'\n')
         pdf(fout,6,6)
         par(mar=c(4,4,4,1),mgp=c(2,1,0))
         if(n!='window'){
@@ -169,13 +167,13 @@ for(jj in 1:length(targets)){
 
 ####plot phase curve
         if(k<=Nmax){
-            fout <- paste0(dir,target,'_sig',k,'_FF.pdf')
-            cat(fout,'\n')
+            fout <- paste0(dir,syntax,'_phase_',n,'.pdf')
+            cat('\n',fout,'\n')
             pdf(fout,6,6)
             ##                    par(mfrow=c(2,1),mar=c(0,4,4,1))
             layout(matrix(data=c(1,2), nrow=2, ncol=1), widths=c(1,1), heights=c(2,1))
             par(mar=c(0,4,4,1))
-            if(SigType!='Kepler'){
+            if(SigType!='kepler'){
                 ysim0 <- par.opt[1]*cos(2*pi/popt*tsim)+par.opt[2]*sin(2*pi/popt*tsim)
                 ysim <- ysim0+par.opt[3]+par.opt[4]*tsim
                 ysims <- ysims+ysim
@@ -212,7 +210,7 @@ for(jj in 1:length(targets)){
             axis(side=1,label=FALSE)
             inds <- sort(tsim%%popt,index.return=TRUE)$ix
             lines(tsim[inds]%%popt,ysim0[inds],col='red')
-            if(SigType!='Kepler'){
+            if(SigType!='kepler'){
                 legend('topright',legend=paste0('P=',round(popt,2),'d'),bty='n',col='red')
             }else{
                 legend('top',legend=paste0('P=',round(popt,2),'d; K=',round(kep$ParKep$K1,2),'m/s; e=',round(kep$ParKep$e1,2)),bty='n',col='red',horiz=TRUE,inset=c(0,-0.1),xpd=NA)
@@ -249,9 +247,8 @@ for(jj in 1:length(targets)){
             dev.off()
         }
         if(k==Nmax){
-
-            fout <- paste0(dir,target,'_allsig_FF.pdf')
-            cat(fout,'\n')
+            fout <- paste0(dir,target,'_',PerType,'_fit_allsig.pdf')
+            cat('\n',fout,'\n')
             pdf(fout,6,6)
             layout(matrix(data=c(1,2), nrow=2, ncol=1), widths=c(1,1), heights=c(2,1))
             par(mar=c(0,4,4,1))
@@ -272,7 +269,7 @@ for(jj in 1:length(targets)){
             lines(tsim,ysims,col='red')
             points(t,tab[,2])
 #            legend('topright',legend=c(paste0('gamma dot=',round(gammadot*365.25,1),'m/s/year',paste0('gamma=',round(gamma),'m/s'))),,bty='n',col='red')
-            if(SigType=='Kepler' & (max(tab[,1])-min(tab[,1]))>10){
+            if(SigType=='kepler' & (max(tab[,1])-min(tab[,1]))>10){
                 legend('topleft',legend=bquote(gamma==.(round(gamma,1))~'m/s'),bty='n',col='red')
                 legend('topright',legend=bquote(dot(gamma)==.(round(gammadot*365.25,1))~'m/s/year'),bty='n',col='red')
             }
@@ -301,23 +298,23 @@ for(jj in 1:length(targets)){
             f1 <- gsub('\\.pdf','_RawRes.txt',fout)
             cat(f1,'\n')
             write.table(cbind(t,per$res,tab[,3]),file=f1,row.names=FALSE,quote=FALSE,col.names=c('t-tmin','RVres','eRVres'))
-            f2 <- gsub('\\.pdf','_bin.txt',fout)
+            f2 <- gsub('\\.pdf','_BinRes.txt',fout)
             cat(f2,'\n')
             write.table(cbind(tbin,data.bin[,2],data.bin[,3]),file=f2,row.names=FALSE,quote=FALSE,col.names=c('tbin-tmin','RVbinRes','eRVbinRes'))
 }
             dev.off()
 
 ####residual periodogram
-            if(per.type=='BFP'){
+            if(PerType=='BFP'){
                 p <- q <- 0
                 if(noise=='MA') q <- 1
                 if(noise=='AR') p <- 1
                 per <- BFP(t,per$res,ey,Nma=q,Nar=p,Indices=Indices,ofac=ofac,model.type='man',fmin=fmin,fmax=fmax,quantify=TRUE,progress=FALSE,GP=FALSE,gp.par=rep(NA,3),noise.only=FALSE,Nsamp=Nsamp,sampling='combined',par.opt=NULL,renew=TRUE)
-            }else if(per.type=='GLST'){
+            }else if(PerType=='GLST'){
                 per <- glst(t,per$res,ey,fmax=fmax,ofac=ofac,fmin=fmin)
             }
-            fout <- paste0(dir,target,'_BFPres_FF.pdf')
-            cat(fout,'\n')
+            fout <- paste0(dir,syntax,'_periodogram_res.pdf')
+            cat('\n',fout,'\n')
             pdf(fout,6,6)
             par(mar=c(4,4,4,1),mgp=c(2,1,0))
             if(n!='window'){
@@ -334,7 +331,7 @@ for(jj in 1:length(targets)){
             lnBF1[['BFPres']] <- lnbf <- pp
             par1[['BFPres']] <- par.opt <- unlist(per$par.opt)[1,]
             Popt1[['BFPres']] <- popt <- per$P[which.max(pp)]
-            tit <- paste0(per.type,' for raw RV subtracted by ',paste(round(Popts,2),collapse='and'),'-day signal')
+            tit <- paste0(PerType,' for raw RV subtracted by ',paste(round(Popts,2),collapse='and'),'-day signal')
             isort <- sort(ps,index.return=TRUE)$ix
             plot(ps[isort],pp[isort],type='l',log='x',ylim=range(0,median(pp),1.1*max(pp)),xaxt='n',yaxt='n',xlab='Period [day]',ylab=ylab,main=tit)
             abline(v= Popts,col=tcol('red',50))

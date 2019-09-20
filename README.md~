@@ -1,1 +1,91 @@
-# Agatha2.0
+# Agatha v2.0
+## Advanced version of Agatha software for periodic signal diagnostics
+
+## 1. Installation
+Install most recent R and R packages from CRAN, for example, [https://cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/)
+Then install R packages using
+`install.packages(c('minpack.lm','magicaxis','foreach','doMC','parallel'))`
+
+## 2. Usage
+You can run the following commandline in your terminal 
+`Rscript agatha2.R 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels`
+>The first argument `2` is the number of signals you want to find.
+>The second argument `0.1` is the oversampling parameter (ofac), ofac>1 is recommended although lower sampling rate is efficient for test.
+>The third argument "data" is the directory where the data files are put. If the directory is where the agatha2.R file is located, use `.` instead.
+>The last arguments provide the data files to be analyzed. Agatha 2.0 only support analysis of one set per target and thus multiple data files would be treated independently. 
+
+By running the above commandline, the output would be
+`
+results/HD210193_MA1.pdf 
+results/HD210193_MA1.txt 
+results/HD210193_sig1.pdf 
+results/HD210193_sig1_OptPar.txt 
+results/HD210193_sig1_DataPhase.txt 
+results/HD210193_sig1_SimPhase.txt 
+results/HD210193_sig1_RawRes.txt 
+results/HD210193_sig1_bin.txt 
+results/HD210193_MA2.pdf 
+results/HD210193_MA2.txt 
+results/HD210193_sig2.pdf 
+results/HD210193_sig2_OptPar.txt 
+results/HD210193_sig2_DataPhase.txt 
+results/HD210193_sig2_SimPhase.txt 
+results/HD210193_sig2_RawRes.txt 
+results/HD210193_sig2_bin.txt 
+results/HD210193_allsig.pdf 
+results/HD210193_allsig_data.txt 
+results/HD210193_allsig_fit.txt 
+results/HD210193_allsig_RawRes.txt 
+results/HD210193_allsig_bin.txt 
+results/HD210193_BFPres.pdf 
+results/HD210193_BFPres.txt 
+results/HD210193_Sindex.pdf 
+results/HD210193_Sindex.txt 
+results/HD210193_Halpha.pdf 
+results/HD210193_Halpha.txt 
+results/HD210193_PhotonCount.pdf 
+results/HD210193_PhotonCount.txt 
+results/HD210193_ObsTime.pdf 
+results/HD210193_ObsTime.txt 
+results/HD210193_window.pdf 
+results/HD210193_window.txt 
+target: HD103949 
+results/HD103949_MA1.pdf 
+results/HD103949_MA1.txt 
+results/HD103949_sig1.pdf 
+results/HD103949_sig1_OptPar.txt 
+results/HD103949_sig1_DataPhase.txt 
+results/HD103949_sig1_SimPhase.txt 
+results/HD103949_sig1_RawRes.txt 
+results/HD103949_sig1_bin.txt 
+results/HD103949_MA2.pdf 
+results/HD103949_MA2.txt 
+results/HD103949_sig2.pdf 
+results/HD103949_sig2_OptPar.txt 
+results/HD103949_sig2_DataPhase.txt 
+results/HD103949_sig2_SimPhase.txt 
+results/HD103949_sig2_RawRes.txt 
+results/HD103949_sig2_bin.txt 
+results/HD103949_allsig.pdf 
+results/HD103949_allsig_data.txt 
+results/HD103949_allsig_fit.txt 
+results/HD103949_allsig_RawRes.txt 
+results/HD103949_allsig_bin.txt 
+results/HD103949_BFPres.pdf 
+results/HD103949_BFPres.txt 
+results/HD103949_Sindex.pdf 
+results/HD103949_Sindex.txt 
+results/HD103949_Halpha.pdf 
+results/HD103949_Halpha.txt 
+results/HD103949_PhotonCount.pdf 
+results/HD103949_PhotonCount.txt 
+results/HD103949_ObsTime.pdf 
+results/HD103949_ObsTime.txt 
+results/HD103949_window.pdf 
+results/HD103949_window.txt 
+`
+These files would provide you add plots and relevant data which store the x, y and probably ey values for each plot. The meaning of file names are as follows:
+>results/HD210193_MA1.pdf - plot for the 
+
+
+## 3. Future developement
