@@ -26,7 +26,7 @@ if(length(args)>0){
     dir.in <- 'data/'
     fs <- c('HD210193_PFS.vels','HD103949_PFS.vels')
 }
-#example: Rscript agatha2.R BFP 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels
+#example: Rscript agatha2.R BFP kepler 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels
 if(!grepl('\\/$',dir.in)) dir.in <- paste0(dir.in,'/')
 dir <- 'results/'
 save.data <- TRUE
