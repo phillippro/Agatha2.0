@@ -11,13 +11,16 @@
 
 ## 1. Installation
 
-Install most recent R and R packages from CRAN, for example, [https://cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/)
+Install most recent R and R packages from CRAN, for example, [https://cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/).
+
 Then install R packages using
+
 `install.packages(c('minpack.lm','magicaxis','foreach','doMC','parallel'))`
 
 ## 2. Usage
 
-You can run the following commandline in your terminal 
+You can run the following commandline in your terminal
+
 `Rscript agatha2.R BFP kepler 2 0.1 MA data HD210193_PFS.vels HD103949_PFS.vels`
 
 >The first argument `2` is the number of signals you want to find.
@@ -29,8 +32,8 @@ You can run the following commandline in your terminal
 >The last arguments provide the data files to be analyzed. Agatha 2.0 only support analysis of one set per target and thus multiple data files would be treated independently. 
 
 By running the above commandline, the output would be
-`
-target: HD210193 
+
+`target: HD210193 
 
  results/HD210193_BFP_MA_periodogram_sig1.pdf 
 results/HD210193_BFP_MA_periodogram_sig1.txt 
@@ -77,8 +80,8 @@ results/HD210193_BFP_MA_periodogram_ObsTime.txt
 results/HD210193_BFP_MA_periodogram_window.txt 
 
 target: HD103949 
-...
-`
+...`
+
 These files provide you plots and relevant data which store the x, y and probably ey values for each plot. The meaning of file names are as follows:
 
 >results/HD210193_BFP_MA_periodogram_sig1 - plot and data for periodogram calculated using BFP+MA(1) for the first signal
