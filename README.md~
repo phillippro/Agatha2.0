@@ -4,10 +4,13 @@
 
 ### Compared with Agatha v1.0, v2.0 provide the following new features:
 
-> The autoregressive noise model can be used to calculate BFP
-> The Keplerian fit using LM algorithm is able to constrain the circular signal identified through BFP
-> The phase curve for Keplerian fit and residuals visualize the fit
-> ln(BF) is calculated in GLST to provide better signal detection threshold (i.e. ln(BF)>5)
+> 1. The autoregressive noise model can be used to calculate BFP
+
+> 2. The Keplerian fit using LM algorithm is able to constrain the circular signal identified through BFP
+
+> 3. The phase curve for Keplerian fit and residuals visualize the fit
+
+> 4. Metrix ln(BF) is calculated in GLST to provide better signal detection threshold (i.e. ln(BF)>5)
 
 ## 1. Installation
 

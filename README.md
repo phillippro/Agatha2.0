@@ -30,13 +30,14 @@ You can run the following commandline in your terminal
 
 >The second argument `0.1` is the oversampling parameter (ofac), ofac>1 is recommended although lower sampling rate is efficient for test.
 
->The third argument "data" is the directory where the data files are put. If the directory is where the agatha2.R file is located, use `.` instead.
+>The third argument `data` is the directory where the data files are put. If the directory is where the agatha2.R file is located, use `.` instead.
 
 >The last arguments provide the data files to be analyzed. Agatha 2.0 only support analysis of one set per target and thus multiple data files would be treated independently. 
 
 By running the above commandline, the output would be
 
-`target: HD210193 
+```
+target: HD210193 
 
  results/HD210193_BFP_MA_periodogram_sig1.pdf 
 results/HD210193_BFP_MA_periodogram_sig1.txt 
@@ -83,7 +84,8 @@ results/HD210193_BFP_MA_periodogram_ObsTime.txt
 results/HD210193_BFP_MA_periodogram_window.txt 
 
 target: HD103949 
-...`
+...
+```
 
 These files provide you plots and relevant data which store the x, y and probably ey values for each plot. The meaning of file names are as follows:
 
